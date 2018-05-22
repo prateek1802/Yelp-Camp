@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Campground = require('../models/campground');
+
 router.get("/campgrounds",function(req,res){
     Campground.find({},function(err,allCampgrounds){
         if(err){
@@ -11,11 +12,15 @@ router.get("/campgrounds",function(req,res){
     });
 });
 
-router.post("/campgrounds",function(req,res){
+router.post("/campgrounds",isLoggedIn,function(req,res){
     var name=req.body.name;
     var image=req.body.image;
     var desc=req.body.description;
-    var newCampground = {name: name,image: image,description: desc};
+    var author={
+        id:req.user._id,
+        username:req.user.username
+    }
+    var newCampground = {name: name,image: image,description: desc,author:author};
     //campgrounds.push(newCampground);
     Campground.create(newCampground,function(err,newlyCreated){
         if(err){
@@ -26,7 +31,7 @@ router.post("/campgrounds",function(req,res){
     });
 });
 
-router.get("/campgrounds/new",function(req,res){
+router.get("/campgrounds/new",isLoggedIn,function(req,res){
     res.render("campgrounds/new");
 });
 
@@ -39,5 +44,13 @@ router.get("/campgrounds/:id",function(req,res){
         }
     });
 });
+
+//function middleware
+function isLoggedIn(req,res,next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect('/login');
+}
 
 module.exports=router;
