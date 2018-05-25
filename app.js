@@ -53,7 +53,14 @@ app.use(commentRoutes);
 app.use(indexRoutes);
 app.use(campgroundRoutes);
 
-app.listen(3000, function(){
-    console.log("Server running on port 3000");
+// app.listen(3000, function(){
+//     console.log("Server running on port 3000");
+// });
+
+var port = process.env.PORT||8086; // Use 8080 for local development
+
+app.listen(port, function (){
+  console.log(`test app listening on port ${port}!`);
 });
+
 module.exports = app;
