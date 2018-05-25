@@ -19,7 +19,9 @@ var indexRoutes = require('./routes/index');
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine","ejs");
-mongoose.connect("mongodb://localhost/yelp_camp");
+// mongoose.connect("mongodb://localhost/yelp_camp");
+mongoose.connect("mongodb://prateek:12345@ds135750.mlab.com:35750/blogapp1996");
+
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
