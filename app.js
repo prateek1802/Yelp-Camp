@@ -53,7 +53,7 @@ app.use(function(req,res,next){
 passport.use(new GoogleStrategy({
     clientID: "607453674122-20gu28fstnmgdhnucvkki8ll51f84vvp.apps.googleusercontent.com",
     clientSecret: "73-NTuqB8ZA0aFk6WIwTdLEC",
-    callbackURL: "http://localhost:8080"
+    callbackURL: "https://glacial-harbor-58042.herokuapp.com/campgrounds"
   },
   function(accessToken, refreshToken, profile, done) {
        User.findOrCreate({ googleId: profile.id }, function (err, user) {
