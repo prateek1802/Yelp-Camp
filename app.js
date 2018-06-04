@@ -10,7 +10,7 @@ var LocalStrategy = require('passport-local');
 var User = require('./models/user');
 var methodOverride = require('method-override');
 var flash = require('connect-flash');
-
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 //routes require
 var commentRoutes = require('./routes/comments');
 var campgroundRoutes = require('./routes/campgrounds');
@@ -49,6 +49,33 @@ app.use(function(req,res,next){
 });
 
 
+//google-login
+passport.use(new GoogleStrategy({
+    clientID: "607453674122-20gu28fstnmgdhnucvkki8ll51f84vvp.apps.googleusercontent.com",
+    clientSecret: "73-NTuqB8ZA0aFk6WIwTdLEC",
+    callbackURL: "http://localhost:8080"
+  },
+  function(accessToken, refreshToken, profile, done) {
+       User.findOrCreate({ googleId: profile.id }, function (err, user) {
+         return done(err, user);
+       });
+  }
+));
+
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+
+    // GET /auth/google/callback
+    //   Use passport.authenticate() as route middleware to authenticate the
+    //   request.  If authentication fails, the user will be redirected back to the
+    //   login page.  Otherwise, the primary route function function will be called,
+    //   which, in this example, will redirect the user to the home page.
+    app.get('/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    function(req, res) {
+    res.redirect('/');
+});
+
 app.use(commentRoutes);
 app.use(indexRoutes);
 app.use(campgroundRoutes);
@@ -57,7 +84,7 @@ app.use(campgroundRoutes);
 //     console.log("Server running on port 3000");
 // });
 
-var port = process.env.PORT||8086; // Use 8080 for local development
+var port = process.env.PORT||8080; // Use 8080 for local development
 
 app.listen(port, function (){
   console.log(`test app listening on port ${port}!`);
