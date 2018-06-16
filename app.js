@@ -84,7 +84,7 @@ app.use(campgroundRoutes);
 //     console.log("Server running on port 3000");
 // });
 
-var port = process.env.PORT||8080; // Use 8080 for local development
+var port = process.env.PORT||3000; // Use 8080 for local development
 
 app.listen(port, function (){
   console.log(`test app listening on port ${port}!`);
